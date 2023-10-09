@@ -48,17 +48,21 @@ function App() {
   const [winner, setWinner] = useState(null) //null = no hay ganador, false = empate
 
   const checkWinner = (boardToCheck) => {
-    //se revisa todas las combinaciones ganadores para ver si X u O gana, se chequea siempre
-    for (combo in WINNER_COMBOS){
-    const [a, b, c] = combo
-    //se verifica si la X o la O esta en todas esas posiciones
-    if (boardToCheck[a] && boardToCheck[a] == boardToCheck[b] && boardToCheck[a] == boardToCheck[c])
-    {return boardToCheck[a] }
-    //si no hay ganador
-    return null
-  }
+      //se revisa todas las combinaciones ganadores para ver si X u O gana, se chequea siempre
+      for (const combo of WINNER_COMBOS){
+      const [a, b, c] = combo
+      //se verifica si la X o la O esta en todas esas posiciones
+      if (boardToCheck[a] && boardToCheck[a] == boardToCheck[b] && boardToCheck[a] == boardToCheck[c])
+      {return boardToCheck[a] }}
+      //si no hay ganador
+      return null
+}
 
-  }
+const resetGame = () => {
+  setBoard(Array(9).fill(null));
+  setTurn(TURNS.X)
+  setWinner(null)
+}
   const updateBoard = (index) => {
     //para que no se actualice la posicion si ya tiene algo, o si hay un ganador
     if (board[index] || winner) return 
@@ -73,7 +77,7 @@ function App() {
     //a los estados y props se los trata como INMUTABLES porque
     //si se lo modifica, pueden ocurrir problemas de renderizado xq se
     //modifica el estado directamente en lugar de utilizar setBoard
-    //por lo tanto los datos de renderizado siempre tiene que ser nuevos
+    //por lo tanto los datos de renderizado siempre tiene que ser nuevos 
     newBoard[index] = turn
     setBoard(newBoard)
 
@@ -106,6 +110,26 @@ function App() {
         <Square isSelected={turn == TURNS.X}>{TURNS.X}</Square>
         <Square isSelected={turn == TURNS.O}>{TURNS.O}</Square>
       </section>
+
+      {
+        winner != null && (
+          <section className='winner'>
+            <div className="text">
+              <h2>
+                {winner == false ? 'Empate' : 'Gano:'}
+              </h2>
+              
+              <header className="win">
+                {winner && <Square>{winner}</Square>}
+              </header>
+
+              <footer>
+                <button onClick={resetGame}>Empezar de nuevo</button>
+              </footer>
+            </div>
+          </section>
+        )
+      }
     </main>
   )
     
